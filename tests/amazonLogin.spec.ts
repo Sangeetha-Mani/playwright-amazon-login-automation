@@ -144,6 +144,38 @@ test.describe("TC_007 - Boundary Test Case of Leading and Trailing Spaces Valida
 
     })
 });
-    
+
+test.describe('TC_009 - Login Functional Tests', ()=> {
+    test("Login form is submitted when enter key is pressed", async ({page})=>{
+            const edgeCasePage = new AmazonLoginPage(page);
+            await edgeCasePage.login(validEmail,validPwd, true);
+            await expect(edgeCasePage.nav_list_Hello_sign_in).toBeVisible();
+            await expect(edgeCasePage.nav_list_Hello_sign_in).not.toContainText("sign in")
+ 
+        });
+});
+
+test.describe("TC_008 - Security Testing", ()=>{
+
+    test("User should see validation msg when do SQL Injection", async ({page})=>{
+        const securityPage = new AmazonLoginPage(page);
+        await securityPage.login(sqlInjection);
+        await expect(securityPage.ErrorMsg).toContainText("Invalid email");
+    })
+
+     test("User should see validation msg when do XSS attack", async ({page})=>{
+        const securityPage = new AmazonLoginPage(page);
+        await securityPage.login(xssAttack);
+        await expect(securityPage.ErrorMsg).toContainText("Invalid email");
+    })
+
+     test("User should see validation msg when do HTML Injection", async ({page})=>{
+        const securityPage = new AmazonLoginPage(page);
+        await securityPage.login(htmlInjection);
+        await expect(securityPage.ErrorMsg).toContainText("Invalid email");
+    });
+});
+
+
 
 
